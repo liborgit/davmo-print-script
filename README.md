@@ -1,4 +1,4 @@
-# Davmo.cz Print Script
+# davmo.cz/print-script
 
 ## Popis
 Tento projekt je automatizační skript pro stahování a tisk PDF souborů z WWW. Skript stahuje seznam souborů z určeného TXT souboru, který je uložen na WWW, a poté jednotlivé PDF soubory automaticky stáhne, vytiskne a po úspěšném tisku odstraní z lokálního úložiště.
