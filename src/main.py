@@ -1,8 +1,16 @@
 import os
 import json
 from config import TXT_URL, BASE_URL, DOWNLOAD_FOLDER, LOG_FILE
-from file_operations import vytvorit_slozku, nacti_seznam_souboru, stahni_soubor
+from file_operations import vytvorit_slozku, stahni_soubor
 from printer import tiskni_soubor, zaznamenej_tisknuty_soubor
+import requests
+
+def nacti_seznam_souboru(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()  # Očekáváme, že data jsou ve formátu JSON
+    else:
+        raise Exception(f"Načtení seznamu souborů se nezdařilo. Server vrátil stavový kód {response.status_code}")
 
 def zpracuj_soubory():
     vytvorit_slozku(DOWNLOAD_FOLDER)
@@ -13,7 +21,6 @@ def zpracuj_soubory():
         print(f"Chyba při načítání seznamu souborů: {e}")
         return
 
-    # Načteme již vytištěné soubory z JSON souboru
     try:
         with open(LOG_FILE, "r") as f:
             vytistene_soubory = json.load(f)
@@ -33,14 +40,12 @@ def zpracuj_soubory():
             try:
                 stahni_soubor(file_url, cesta_k_souboru)
 
-                # Ověření, zda byl soubor skutečně stažen
                 if os.path.exists(cesta_k_souboru):
                     print(f"Soubor {soubor} byl úspěšně stažen. Odesílám k tisku.")
                     tiskni_soubor(cesta_k_souboru)
                     zaznamenej_tisknuty_soubor(soubor, LOG_FILE)
                 else:
                     print(f"Soubor {soubor} nebyl nalezen po stažení.")
-
             except Exception as e:
                 print(f"Chyba při zpracování souboru {soubor}: {e}")
 
