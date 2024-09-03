@@ -1,13 +1,13 @@
 # davmo.cz/print-script
 
 ## Popis
-Tento projekt je automatizační skript pro stahování a tisk PDF souborů z WWW. Skript stahuje seznam souborů z určeného TXT souboru, který je uložen na WWW, a poté jednotlivé PDF soubory automaticky stáhne, vytiskne a po úspěšném tisku odstraní z lokálního úložiště.
+Tento projekt je automatizační skript pro stahování a tisk PDF souborů z webu. Skript stahuje seznam souborů z určeného TXT souboru, který je uložen na webu, a poté jednotlivé PDF soubory automaticky stáhne, vytiskne a po úspěšném tisku odstraní z lokálního úložiště.
 
 ## Funkce
-- Automatické stahování seznamu PDF souborů z WWW.
+- Automatické stahování seznamu PDF souborů z webu.
 - Ukládání stažených PDF souborů do specifikované složky.
 - Automatický tisk PDF souborů.
-- Mazání PDF souborů po úspěšném tisku.
+- Mazání PDF souborů z lokálního úložiště po úspěšném tisku.
 - Záznam již vytisknutých souborů, aby nedocházelo k jejich opakovanému tisku.
 
 ## Použití
@@ -21,8 +21,5 @@ Tento projekt je automatizační skript pro stahování a tisk PDF souborů z WW
 - Nainstalované knihovny: `requests`
 
 ## Instalace
-1. Klonujte repozitář: `git clone https://www.davmo.cz/print-script`
-2. Nainstalujte požadované knihovny: `pip install -r requirements.txt`
-
-## Licence
-Tento projekt je licencován pod licencí MIT.
+1. Klonujte repozitář: `git clone https://github.com/liborgit/davmo-print-script`
+3. Nainstalujte požadované knihovny: `pip install -r requirements.txt`
