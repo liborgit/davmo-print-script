@@ -9,17 +9,14 @@ def tiskni_soubor(cesta_k_souboru):
         raise Exception(f"Chyba při tisku souboru {cesta_k_souboru}: {e}")
 
 def zaznamenej_tisknuty_soubor(jmeno_souboru, log_soubor):
-    # Nejprve načteme existující data
     try:
         with open(log_soubor, "r") as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         data = []
 
-    # Přidáme nový záznam
     if jmeno_souboru not in data:
         data.append(jmeno_souboru)
 
-    # Zaznamenáme zpět do souboru
     with open(log_soubor, "w") as f:
         json.dump(data, f, indent=4)

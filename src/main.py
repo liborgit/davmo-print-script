@@ -1,16 +1,8 @@
 import os
 import json
 from config import TXT_URL, BASE_URL, DOWNLOAD_FOLDER, LOG_FILE
-from file_operations import vytvorit_slozku, stahni_soubor
+from file_operations import vytvorit_slozku, nacti_seznam_souboru, stahni_soubor
 from printer import tiskni_soubor, zaznamenej_tisknuty_soubor
-import requests
-
-def nacti_seznam_souboru(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()  # Očekáváme, že data jsou ve formátu JSON
-    else:
-        raise Exception(f"Načtení seznamu souborů se nezdařilo. Server vrátil stavový kód {response.status_code}")
 
 def zpracuj_soubory():
     vytvorit_slozku(DOWNLOAD_FOLDER)
@@ -54,6 +46,5 @@ def zpracuj_soubory():
 
     print("Zpracování dokončeno.")
 
-# Spuštění procesu
 if __name__ == "__main__":
     zpracuj_soubory()

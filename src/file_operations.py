@@ -8,7 +8,7 @@ def vytvorit_slozku(cesta):
 def nacti_seznam_souboru(url):
     response = requests.get(url)
     if response.status_code == 200:
-        return response.text.splitlines()
+        return response.json()  # Očekáváme, že data jsou ve formátu JSON
     else:
         raise Exception(f"Načtení seznamu souborů se nezdařilo. Server vrátil stavový kód {response.status_code}")
 
