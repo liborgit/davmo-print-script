@@ -1,3 +1,5 @@
+Poznámka: nyní pracuji na rozšíření funkce automatizace a převodu CLI aplikace do GUI formy
+
 # Skript pro automatický tisk PDF souborů
 
 Tento projekt je určen k automatickému stahování a tisku PDF souborů z daného seznamu, který je uložen ve formátu JSON. Skript také zaznamenává, které soubory byly úspěšně vytištěny, aby se zabránilo jejich opakovanému tisku.
