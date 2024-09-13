@@ -1,22 +1,24 @@
 import os
 import json
+import logging
 
-def tiskni_soubor(cesta_k_souboru):
+def print_file(file_path):
     try:
-        os.startfile(cesta_k_souboru, "print")
-        print(f"Soubor {cesta_k_souboru} byl úspěšně odeslán k tisku.")
+        os.startfile(file_path, "print")
+        logging.info(f"Soubor {file_path} byl úspěšně odeslán k tisku.")
     except OSError as e:
-        raise Exception(f"Chyba při tisku souboru {cesta_k_souboru}: {e}")
+        raise Exception(f"Chyba při tisku souboru {file_path}: {e}")
 
-def zaznamenej_tisknuty_soubor(jmeno_souboru, log_soubor):
+def record_printed_file(file_name, log_file):
     try:
-        with open(log_soubor, "r") as f:
+        with open(log_file, "r") as f:
             data = json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         data = []
 
-    if jmeno_souboru not in data:
-        data.append(jmeno_souboru)
+    if file_name not in data:
+        data.append(file_name)
 
-    with open(log_soubor, "w") as f:
+    with open(log_file, "w") as f:
         json.dump(data, f, indent=4)
+        logging.info(f"Soubor {file_name} byl zaznamenán do logu {log_file}.")

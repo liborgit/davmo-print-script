@@ -1,21 +1,28 @@
 import os
 import requests
+import logging
 
-def vytvorit_slozku(cesta):
-    if not os.path.exists(cesta):
-        os.makedirs(cesta)
+def create_folder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+        logging.info(f"Složka {path} byla vytvořena.")
 
-def nacti_seznam_souboru(url):
+def load_file_list(url):
     response = requests.get(url)
     if response.status_code == 200:
-        return response.json()  # Očekáváme, že data jsou ve formátu JSON
+        return response.json()
     else:
-        raise Exception(f"Načtení seznamu souborů se nezdařilo. Server vrátil stavový kód {response.status_code}")
+        raise requests.exceptions.RequestException(
+            f"Načtení seznamu souborů se nezdařilo. Server vrátil stavový kód {response.status_code}"
+        )
 
-def stahni_soubor(file_url, uloz_cesta):
+def download_file(file_url, save_path):
     response = requests.get(file_url)
     if response.status_code == 200:
-        with open(uloz_cesta, "wb") as file:
+        with open(save_path, "wb") as file:
             file.write(response.content)
+            logging.info(f"Soubor {file_url} byl úspěšně stažen do {save_path}.")
     else:
-        raise Exception(f"Stažení souboru {file_url} se nezdařilo. Server vrátil stavový kód {response.status_code}")
+        raise requests.exceptions.RequestException(
+            f"Stažení souboru {file_url} se nezdařilo. Server vrátil stavový kód {response.status_code}"
+        )

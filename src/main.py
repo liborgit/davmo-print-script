@@ -1,50 +1,68 @@
 import os
 import json
+import logging
+import requests
 from config import TXT_URL, BASE_URL, DOWNLOAD_FOLDER, LOG_FILE
-from file_operations import vytvorit_slozku, nacti_seznam_souboru, stahni_soubor
-from printer import tiskni_soubor, zaznamenej_tisknuty_soubor
+from file_operations import create_folder, load_file_list, download_file
+from printer import print_file, record_printed_file
 
-def zpracuj_soubory():
-    vytvorit_slozku(DOWNLOAD_FOLDER)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-    try:
-        seznam_souboru = nacti_seznam_souboru(TXT_URL)
-    except Exception as e:
-        print(f"Chyba při načítání seznamu souborů: {e}")
+def process_files():
+    create_folder(DOWNLOAD_FOLDER)
+
+    file_list = get_file_list()
+    if file_list is None:
         return
 
+    printed_files = get_printed_files()
+
+    files_printed = download_and_print_files(file_list, printed_files)
+
+    if not files_printed:
+        logging.info("Žádné nové soubory k tisku.")
+    logging.info("Zpracování dokončeno.")
+
+def get_file_list():
+    try:
+        return load_file_list(TXT_URL)
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Chyba při načítání seznamu souborů: {e}")
+        return None
+
+def get_printed_files():
     try:
         with open(LOG_FILE, "r") as f:
-            vytistene_soubory = json.load(f)
+            return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        vytistene_soubory = []
+        return []
 
-    soubory_vytištěny = False
+def download_and_print_files(file_list, printed_files):
+    files_printed = False
 
-    for soubor in seznam_souboru:
-        if soubor not in vytistene_soubory:
-            print(f"Stahuji soubor: {soubor}")
-            soubory_vytištěny = True
+    for file in file_list:
+        if file not in printed_files:
+            logging.info(f"Stahuji soubor: {file}")
+            files_printed = True
 
-            file_url = BASE_URL + soubor
-            cesta_k_souboru = os.path.join(DOWNLOAD_FOLDER, soubor)
+            file_url = BASE_URL + file
+            file_path = os.path.join(DOWNLOAD_FOLDER, file)
 
-            try:
-                stahni_soubor(file_url, cesta_k_souboru)
+            if download_file_and_handle(file_url, file_path):
+                print_file(file_path)
+                record_printed_file(file, LOG_FILE)
+            else:
+                logging.warning(f"Soubor {file} nebyl nalezen po stažení.")
+    
+    return files_printed
 
-                if os.path.exists(cesta_k_souboru):
-                    print(f"Soubor {soubor} byl úspěšně stažen. Odesílám k tisku.")
-                    tiskni_soubor(cesta_k_souboru)
-                    zaznamenej_tisknuty_soubor(soubor, LOG_FILE)
-                else:
-                    print(f"Soubor {soubor} nebyl nalezen po stažení.")
-            except Exception as e:
-                print(f"Chyba při zpracování souboru {soubor}: {e}")
-
-    if not soubory_vytištěny:
-        print("Žádné nové soubory k tisku.")
-
-    print("Zpracování dokončeno.")
+def download_file_and_handle(file_url, file_path):
+    try:
+        download_file(file_url, file_path)
+        return os.path.exists(file_path)
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Chyba při stahování souboru {file_url}: {e}")
+        return False
 
 if __name__ == "__main__":
-    zpracuj_soubory()
+    process_files()
