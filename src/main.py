@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import requests
-from config import TXT_URL, BASE_URL, DOWNLOAD_FOLDER, LOG_FILE
+from config import LIST_URL, BASE_URL, DOWNLOAD_FOLDER, LOG_FILE
 from file_operations import create_folder, load_file_list, download_file
 from printer import print_file, record_printed_file
 
@@ -25,7 +25,7 @@ def process_files():
 
 def get_file_list():
     try:
-        return load_file_list(TXT_URL)
+        return load_file_list(LIST_URL)
     except requests.exceptions.RequestException as e:
         logging.error(f"Chyba při načítání seznamu souborů: {e}")
         return None
