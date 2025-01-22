@@ -1,4 +1,4 @@
-# Automation Script for Printing Incoming Orders (Invoices)
+# Automation Script for Printing Incoming Invoices
 
 This program is designed for automatically downloading and printing PDF files from a specified list stored in JSON format. The script also logs which files have been successfully printed to prevent duplicate printing. It was created for a private client and is published with prior consent.
 
